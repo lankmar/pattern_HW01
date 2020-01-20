@@ -5,49 +5,48 @@ using System.Text;
 //2. Реализовать программу из раздела «Повторяющиеся фрагменты кода» с помощью делегата Func.
 namespace HomeWork_1
 {
+    public class Constants
+    {
+        public static readonly string Address = "Москва, Россия";
+        public static readonly string Format = "{0}  -  {1}, адрес {2}, возраст {3}";
+    }
     class Task2
     {
-    }
-    class Program
-    {
-        public static readonly string Address = Constants.Address;
-        public static readonly string Format = Constants.Format;
-        private static void DummyFunc()
+        public static readonly string address = Constants.Address;
+        public static readonly string format = Constants.Format;
+        
+        private static string DummyFunc()
         {
-            WriteToConsole("Петя", "школьный друг", 30);
+            return String.Format(format, "Петя", "школьный друг", address,  30);
         }
 
-        private static void DummyFuncAgain()
+        private static string DummyFuncAgain()
         {
-            WriteToConsole("Вася", "сосед", 54);
+            return String.Format(format, "Вася", "сосед", address, 54);
         }
 
-        private static void DummyFuncMore()
+        private static string DummyFuncMore()
         {
-            WriteToConsole("Николай", "сын", 4);
+            return String.Format(format, "Николай", "сын", address,  4);
         }
 
-        private static void WriteToConsole(string name, string description,
-                                           int age)
+        public static void MakeFunc(Func<string> func)
         {
-            Console.WriteLine(Format, name, description, Address, age);
+            string methodName = func.Method.Name;
+            Console.WriteLine("Начало работы метода {0}", methodName);
+            Console.WriteLine(func());
+            Console.WriteLine("Окончание работы метода {0}", methodName);
         }
 
-        static void Main(string[] args)
+        public static IEnumerable<Func<string>> GetActionStep()
         {
-            Console.WriteLine("Начало работы метода DummyFunc");
-            DummyFunc();
-            Console.WriteLine("Окончание работы метода DummyFunc");
-
-            Console.WriteLine("Начало работы метода DummyFuncAgain");
-            DummyFuncAgain();
-            Console.WriteLine("Окончание работы метода DummyFuncAgain");
-
-            Console.WriteLine("Начало работы метода DummyFuncMore");
-            DummyFuncMore();
-            Console.WriteLine("Окончание работы метода DummyFuncMore");
-
-            Console.ReadLine();
+            return new List<Func<string>>()
+            {
+                DummyFunc,
+                DummyFuncAgain,
+                DummyFuncMore
+            };
         }
+        
     }
 }

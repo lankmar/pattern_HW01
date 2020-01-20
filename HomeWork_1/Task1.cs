@@ -5,35 +5,43 @@ using System.Text;
 namespace HomeWork_1
 {
     //1. Провести рефакторинг кода из раздела «Повторяющаяся логика», применяя внедрение зависимостей к классу EntityBase.
-    class Task1
+    public interface IIdGenerator
     {
+        long CalculateId();
     }
 
-    public class Customer
+    public class EntityBase
     {
-        public long Id { get; set; }
+        private readonly IIdGenerator idGenerator;
+
+        public long Id { get; private set; }
+
+        public EntityBase(IIdGenerator IdGenerator)
+        {
+            idGenerator = IdGenerator ?? throw new ArgumentNullException();
+            Id = idGenerator.CalculateId();
+        }
+    }
+ 
+    public class Customer : EntityBase
+    {
         public string Description { get; set; }
-        public Customer()
-        {
-            Id = CalculateId();
-        }
-        private long CalculateId()
-        {
-            long id = DateTime.Now.Ticks;
-            return id;
-        }
+        public Customer(IIdGenerator ideGenerator): base (ideGenerator) {  }
+       
     }
-    public class Store
+    public class Store : EntityBase
     {
-        public long Id { get; set; }
-        public Store()
-        {
-            Id = CalculateId();
-        }
-        private long CalculateId()
+        public Store(IIdGenerator ideGenerator) : base(ideGenerator) { }   
+    }
+
+    public class DefaultIdGererator : IIdGenerator
+    {
+        public long CalculateId()
         {
             long id = DateTime.Now.Ticks;
             return id;
         }
     }
+    
+
 }
